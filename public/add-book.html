@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Library | Add Book</title>
+
+    <link rel="shortcut icon" href="#"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="library/style/style.css">
+
+    <script src="library/javascript/script.js"></script>
+</head>
+
+<body class="body">
+
+<!-- Navigation bar -->
+<div id="navigation-bar-palace" class="w-100"></div>
+
+<div class="container mt-2 marg-b-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <header class="card-header">
+                    <h4 class="card-title mt-2">
+                        Add Book
+                    </h4>
+                </header>
+                <article class="card-body">
+                    <form id="add-book">
+
+                        <div class="form-group">
+                            <label for="hardcover">
+                                *Hardcover file
+                            </label>
+                            <input name="hardcover"
+                                   id="hardcover"
+                                   type="text"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"/>
+                            <div class="meta">
+                                <a>Use only .png or .jpeg types of file.</a>
+                            </div>
+                            <div class="text-danger text-center">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">
+                                *Title
+                            </label>
+                            <input name="name"
+                                   id="name"
+                                   type="text"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label for="author-first-name">
+                                    *Author first name
+                                </label>
+                                <input name="authorFirstName"
+                                       id="author-first-name"
+                                       type="text"
+                                       class="form-control ${status.error ? 'is-invalid' : ''}"
+                                       value=""/>
+                                <div class="text-danger text-center"></div>
+                            </div> <!-- form-group end.// -->
+
+                            <div class="col form-group">
+                                <label for="author-last-name">
+                                    *Author last name
+                                </label>
+                                <input name="authorLastName"
+                                       id="author-last-name"
+                                       type="text"
+                                       class="form-control ${status.error ? 'is-invalid' : ''}"
+                                       value=""/>
+                                <div class="text-danger text-center"></div>
+                            </div> <!-- form-group end.// -->
+                        </div> <!-- form-row end.// -->
+
+                        <div class="form-group">
+                            <label for="publisher">
+                                Publisher
+                            </label>
+                            <input name="publisher"
+                                   id="publisher"
+                                   type="text"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label for="publication-year">
+                                Publication year
+                            </label>
+                            <input name="publicationYear"
+                                   id="publication-year"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"
+                                   type="number"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label for="number-of-pages">
+                                Number of pages
+                            </label>
+                            <input name="numberOfPages"
+                                   id="number-of-pages"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"
+                                   type="number"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label for="language">
+                                Language
+                            </label>
+                            <input name="language"
+                                   id="language"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"
+                                   type="text"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label for="description">
+                                Description
+                            </label>
+                            <input name="description"
+                                   id="description"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"
+                                   type="text"/>
+                            <div class="text-danger text-center"></div>
+                        </div> <!-- form-group end.// -->
+
+                        <div class="form-group">
+                            <label for="book-file">
+                                *Book file
+                            </label>
+                            <input name="book-file"
+                                   id="book-file"
+                                   type="text"
+                                   class="form-control ${status.error ? 'is-invalid' : ''}"/>
+                            <div class="meta">
+                                <a>Use only .pdf or .txt types of file.</a>
+                            </div>
+                            <div class="text-danger text-center"></div>
+                        </div>
+
+                        <small class="form-text text-muted mb-2">
+                            * - required fields
+                        </small>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-lg btn-success btn-block btn-signin">
+                                Add Book
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--container end.//-->
+
+<!-- Footer -->
+<div id="footer-palace" class="w-100"></div>
+
+<script>
+    document.getElementById('add-book').addEventListener('submit', e => addBook(e))
+</script>
+</body>
+
+</html>

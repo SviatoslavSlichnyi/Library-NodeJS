@@ -1,0 +1,17 @@
+{
+  "name": "web-site-library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Sviatoslav Slichnyi",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "formidable": "^1.2.2",
+    "nodemon": "^2.0.3"
+  }
+}
