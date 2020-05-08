@@ -1,0 +1,145 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <title>Library | Registration</title>
+
+    <link rel="shortcut icon" href="#"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/library/style/style.css">
+
+    <script src="/library/javascript/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+</head>
+
+<body class="body">
+
+<!-- Navigation bar -->
+<div id="navigation-bar-palace" class="w-100"></div>
+
+<!-- Content -->
+<div class="container mt-4 marg-b-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+
+                <header class="card-header">
+                    <h4 class="card-title mt-2">
+                        Sign up
+                    </h4>
+                </header>
+
+                <article class="card-body">
+                    <form id="reg-form">
+                        <div class="form-group">
+                            <label for="username">
+                                Username
+                            </label>
+                            <small class="form-text text-muted">
+                                This name will be used for public posts.
+                            </small>
+                            <input id="username"
+                                   name="username"
+                                   type="text"
+                                   class="form-control"/>
+                            <div class="text-danger text-center"></div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col form-group">
+                                <label for="first-name">
+                                    First name
+                                </label>
+                                <div id="first-name-error" class="invalid-text"></div>
+                                <input id="first-name"
+                                       name="firstName"
+                                       type="text"
+                                       class="form-control"/>
+                                <div class="text-danger text-center"></div>
+                            </div>
+
+                            <div class="col form-group">
+                                <label for="last-name">
+                                    Last name
+                                </label>
+                                <div id="last-name-error" class="invalid-text"></div>
+                                <input id="last-name"
+                                       name="lastName"
+                                       type="text"
+                                       class="form-control"/>
+                                <div class="text-danger text-center"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">
+                                Email
+                            </label>
+                            <div id="error-email" class="invalid-text"></div>
+                            <input id="email"
+                                   name="email"
+                                   type="email"
+                                   class="form-control"/>
+                            <div class="text-danger text-center"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">
+                                Create password
+                            </label>
+                            <div id="error-pwd" class="invalid-text"></div>
+                            <input id="password"
+                                   name="password"
+                                   type="password"
+                                   class="form-control"/>
+                            <div class="text-danger text-center"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passwordConfirm">
+                                Confirm password
+                            </label>
+                            <div id="error-conf-pwd" class="invalid-text"></div>
+                            <input id="passwordConfirm" name="passwordConfirm"
+                                   type="password"
+                                   class="form-control"/>
+                            <div class="text-danger text-center"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit"
+                                    class="btn btn-lg btn-primary btn-block btn-signin">
+                                Register
+                            </button>
+                        </div>
+                        <small class="text-muted">
+                            By clicking the 'Sign Up' button, you confirm that you accept our <br>Terms of use and
+                            Privacy Policy.
+                        </small>
+                    </form>
+                </article>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<div id="footer-palace" class="w-100"></div>
+
+<script>
+    document.getElementById('reg-form').addEventListener('submit', e => registerAccount(e))
+</script>
+</body>
+
+</html>

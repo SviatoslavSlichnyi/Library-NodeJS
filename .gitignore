@@ -1,0 +1,7 @@
+#files
+
+
+#folders
+.idea/
+node_modules/
+storage/
