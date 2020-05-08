@@ -49,6 +49,23 @@ post = (url, data, success) => {
         alert("request was not sent");
     }
 }
+mapUrlParams = (url) => {
+    let paramsStartPosition = url.indexOf('?');
+
+    let params = {};
+    if (paramsStartPosition === -1) return params
+
+    url.slice(paramsStartPosition+1)
+        .split('&')
+        .forEach(paramStr => {
+            let param = paramStr.split('=');
+            if (param.length !== 2) throw new Error('Incorrect url parameters with length: ' + param.length)
+
+            params[param[0]] = param[1]
+        })
+
+    return params
+}
 
 
 loadNavigationBar = () => {
@@ -71,7 +88,7 @@ addFooterToPage = (xhr) => {
 
 loadBookCards = () => {
     const url = `${contextApiPath}/books`
-    get(url, (xhr) => fillPageWithBookCards(JSON.parse(xhr.response)))
+    get(url, xhr => fillPageWithBookCards(JSON.parse(xhr.response)))
 }
 fillPageWithBookCards = (booksData) => {
     booksData.list.forEach(book => generateAndInsertBookCard(book))
@@ -88,7 +105,15 @@ generateAndInsertBookCard = (book) => {
         let footer = document.createElement('DIV');
             let openBtn = document.createElement('A');
 
-    openBtn.href = `${contextPath}/book/` + book.id
+    if (book.hardcoverUrl !== '' && book.hardcoverUrl !== undefined) {
+        img.src = book.hardcoverUrl
+    } else {
+        img.src="https://icons.iconarchive.com/icons/paomedia/small-n-flat/512/book-icon.png"
+    }
+    title.innerText = book.name
+    author.innerText = `${book.authorFirstName} ${book.authorLastName}`
+    openBtn.href = `${contextPath}/book?id=` + book.id
+    openBtn.innerText = 'Open'
 
     card.classList.add('card')
     card.classList.add('m-4')
@@ -126,6 +151,131 @@ generateAndInsertBookCard = (book) => {
     booksPlace.appendChild(card)
 }
 
+loadManageBookList = () => {
+    const url = `${contextApiPath}/books`
+    get(url, xhr => fillPageWithBookListItems(JSON.parse(xhr.response)))
+}
+fillPageWithBookListItems = (books) => {
+    books.list.forEach(book => generateAndInsertBookListItem(book))
+}
+generateAndInsertBookListItem = (book) => {
+    const bookListItemPlace = document.getElementById('m-books-place')
+
+    let row = document.createElement('TR');
+        let id = document.createElement('TH');
+        let name = document.createElement('TD');
+        let author = document.createElement('TD');
+        let username = document.createElement('TD');
+        let open = document.createElement('TD')
+            let openRef = document.createElement('A');
+        let del = document.createElement('TD');
+            let deleteRef = document.createElement('A');
+
+    id.innerText = book.id
+    name.innerText = book.name
+    author.innerText = `${book.authorFirstName} ${book.authorLastName}`
+    openRef.innerText = 'Open'
+    openRef.href = `${contextPath}/book?id=` + book.id
+    deleteRef.innerText = 'Delete'
+    // deleteRef.href = `${contextApiPath}/book/delete/` + book.id
+    deleteRef.addEventListener('click', () => postDeleteBook(book))
+
+    openRef.classList.add('btn')
+    openRef.classList.add('btn-primary')
+    openRef.classList.add('btn-sm')
+
+    deleteRef.classList.add('btn')
+    deleteRef.classList.add('btn-outline-danger')
+    deleteRef.classList.add('btn-sm')
+
+    open.appendChild(openRef)
+
+    del.appendChild(deleteRef)
+
+    row.appendChild(id)
+    row.appendChild(name)
+    row.appendChild(author)
+    row.appendChild(username)
+    row.appendChild(open)
+    row.appendChild(del)
+
+    bookListItemPlace.appendChild(row)
+}
+
+loadManageAccountsList = () => {
+    const url = `${contextApiPath}/accounts`
+    get(url, xhr => fillPageWithAccountsListItems(JSON.parse(xhr.response)))
+}
+fillPageWithAccountsListItems = (accounts) => {
+    accounts.list.forEach(account => generateAndInsertAccountListItem(account))
+}
+generateAndInsertAccountListItem = (account) => {
+    const accountListItemPlace = document.getElementById('m-account-place')
+
+    let row = document.createElement('TR');
+    let id = document.createElement('TH');
+    let username = document.createElement('TD');
+    let email = document.createElement('TD');
+    let open = document.createElement('TD')
+    let openRef = document.createElement('A');
+    let del = document.createElement('TD');
+    let deleteRef = document.createElement('A');
+
+    id.innerText = account.id
+    username.innerText = account.username
+    email.innerText = account.email
+    openRef.innerText = 'Open'
+    openRef.href = `${contextPath}/account?id=` + account.id
+    deleteRef.innerText = 'Delete'
+    deleteRef.addEventListener('click', () => postDeleteAccount(account))
+
+    openRef.classList.add('btn')
+    openRef.classList.add('btn-primary')
+    openRef.classList.add('btn-sm')
+
+    deleteRef.classList.add('btn')
+    deleteRef.classList.add('btn-outline-danger')
+    deleteRef.classList.add('btn-sm')
+
+    open.appendChild(openRef)
+
+    del.appendChild(deleteRef)
+
+    row.appendChild(id)
+    row.appendChild(username)
+    row.appendChild(email)
+    row.appendChild(open)
+    row.appendChild(del)
+
+    accountListItemPlace.appendChild(row)
+}
+
+loadBookInfo = () => {
+    const id = mapUrlParams(location.href)['id']
+    const url = `${contextApiPath}/book?id=${id}`
+
+    get(url, xhr => fillPageWithBookInfo(JSON.parse(xhr.response)))
+}
+fillPageWithBookInfo = (book) => {
+    console.log('book: ' + JSON.stringify(book))
+
+    document.getElementById('title').innerText = book.name;
+    document.getElementById('first-name').innerText = book.firstName;
+    document.getElementById('last-name').innerText = book.last;
+    let hardcoverImg = document.getElementById('hardcover-img');
+    if (book.hardcoverUrl !== '') {
+        hardcoverImg.src = book.hardcoverUrl;
+    }
+    document.getElementById('book-file-url').href = book.bookFileUrl;
+
+    document.getElementById('publisher').innerText = book.publisher;
+    document.getElementById('publication-year').innerText = book.publicationYear;
+    document.getElementById('pages').innerText = book.numberOfPages;
+    document.getElementById('language').innerText = book.language;
+    document.getElementById('description').innerText = book.description;
+}
+
+
 addBook = (e) => {
     e.preventDefault()
     let hardcoverUrl = document.getElementById('hardcover').value
@@ -152,62 +302,95 @@ addBook = (e) => {
         bookFileUrl: bookFileUrl
     }
 
+    if (!isBookDataValid(data)) {
+        alert('Error: Some fields are not filled.')
+        return
+    }
+
     const url = `${contextPath}/add-book`;
     post(url, data, () => {
         location.replace(`${contextPath}/books`)
     })
 }
+registerAccount = (e) => {
+    e.preventDefault()
 
+    let username = document.getElementById('username').value;
+    let firstName = document.getElementById('first-name').value;
+    let lastName = document.getElementById('last-name').value;
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
+    let passwordConfirm = document.getElementById('passwordConfirm').value;
 
-// $(function() {
-//     $('#email').on('focusout', () => validateEmail());
-//     $('#pwd').on('focusout', () => validatePassword());
-// });
-//
-//
-// function validateEmail() {
-//     let email = $("#email");
-//     let isValid = true;
-//
-//     if (!email.val()) {
-//         isValid = false;
-//         email.addClass('is-invalid');
-//         $("#email-error").html("Email is required")
-//     } else if (!isEmailValid(email.val())) {
-//         isValid = false;
-//         email.addClass('is-invalid');
-//         $("#email-error").html("Invalid email")
-//     } else {
-//         email.removeClass('is-invalid');
-//         $("#email-error").html('');
-//     }
-//
-//     return isValid;
-// }
-//
-// function isEmailValid(email){
-//     let re = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-//     return re.test(String(email).toLowerCase());
-// }
-//
-// function validatePassword() {
-//     let lengthOfPassword = 8;
-//
-//     let password = $("#pwd");
-//     let isValid = true;
-//
-//     if (!password.val()) {
-//         isValid = false;
-//         password.addClass('is-invalid');
-//         $("#pwd-error").html("Password is required");
-//     } else if (password.val().length < lengthOfPassword) {
-//         isValid = false;
-//         password.addClass('is-invalid');
-//         $("#pwd-error").html(`Password should be more than ${lengthOfPassword} symbols`);
-//     } else {
-//         password.removeClass('is-invalid');
-//         $("#pwd-error").html('');
-//     }
-//
-//     return isValid;
-// }
+    let data = {
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        passwordConfirm: passwordConfirm
+    }
+
+    if (!isAccountDataValid(data)) {
+        return
+    }
+
+    const url = `${contextPath}/registration`
+    post(url, data, () => {
+        alert('Account was successfully registered.')
+        location.replace(`${contextPath}`)
+    })
+}
+postDeleteAccount = (account) => {
+    const url = `${contextApiPath}/account/delete`
+    post(url, {id: account.id}, () => {
+        alert(`"${account.username}"'s account was successfully deleted.`)
+        location.reload()
+    })
+}
+postDeleteBook = (book) => {
+    const url = `${contextApiPath}/book/delete`
+    post(url, {id: book.id}, () => {
+        alert(`"${book.name}" book was successfully deleted.`)
+        location.reload()
+    })
+}
+
+isBookDataValid = (bookData) => {
+    for (const property in bookData) {
+        console.log(`${property}: ${bookData[property]}`)
+        if (bookData[property] === '' || bookData[property] === undefined) {
+            return false;
+        }
+    }
+
+    return true;
+}
+isAccountDataValid = (accountData) => {
+    for (const property in accountData) {
+        console.log(`${property}: ${accountData[property]}`)
+        if (accountData[property] === '' || accountData[property] === undefined) {
+            alert('Some of fields are empty.')
+            return false;
+        }
+    }
+
+    const password = accountData['password'];
+    const passwordConfirm = accountData['passwordConfirm']
+    if (password !== passwordConfirm) {
+        alert(`Confirm password doesn't match with password`)
+        return false
+    }
+
+    const email = accountData['email'];
+    if (!validateEmail(email)) {
+        alert('Incorrect email.')
+        return false
+    }
+
+    return true;
+}
+validateEmail = (email) => {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}

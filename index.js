@@ -5,25 +5,34 @@ const path = require('path')
 const port = 8080
 const contextPath = '/library'
 const contextApiPath = '/api.library'
+
 const pagesDir = __dirname + '/public'
 const booksDataPath = path.join(__dirname, 'storage', 'books.json')
 const accountsDataPath = path.join(__dirname, 'storage', 'accounts.json')
 
 const registerPathWithPage = {
-    '': 'index',
     '/': 'index',
+    '/library': 'index',
     '/nav-bar': 'nav-bar',
     '/footer': 'footer',
+    '/book': 'book',
     '/books': 'books',
-    '/add-book': 'add-book'
+    '/add-book': 'add-book',
+    '/account': 'account',
+    '/registration': 'registration',
+    '/admin/manage-accounts': 'manage-accounts',
+    '/admin/manage-books': 'manage-books'
 }
-
 const getDataByPathFunctions = {
-    '/books': () => getBooksData()
+    '/book': (req) => getBookData(req),
+    '/books': () => getBooksData(),
+    '/accounts': () => getAccountsData()
 }
-
 const postDataFunctions = {
     '/add-book': (json) => saveBook(json),
+    '/book/delete': (json) => deleteBook(json),
+    '/registration': (json) => registerAccount(json),
+    '/account/delete': (json) => deleteAccount(json)
 }
 
 const server = http.createServer((req, res) => {
@@ -34,7 +43,10 @@ const server = http.createServer((req, res) => {
             throw new Error('Unsupported method request')
         }
     } catch (e) {
+        console.log('url: ' + req.url)
         console.log(e.message)
+        console.log()
+
         res.writeHead(500)
         res.end('Something went wrong.Please, contact with ADMIN.')
     }
@@ -45,7 +57,6 @@ server.listen(port, () => {
     console.log(`---------------------------------------------------------------`)
     console.log()
 })
-
 
 doGET = (req, res) => {
     const context = mapContextPath(req.url)
@@ -118,36 +129,72 @@ getPage = (req, res) => {
 getData = (req, res) => {
 
     const subUrl = mapSubUrl(req.url)
-    if (postDataFunctions.hasOwnProperty(subUrl)) {
-        const dataStr = postDataFunctions[subUrl.toString()]();
+    if (getDataByPathFunctions.hasOwnProperty(subUrl)) {
+        const dataStr = getDataByPathFunctions[subUrl.toString()](req, res);
 
         res.writeHead(200, {
             'Content-Type': 'application/json'
         })
         res.end(dataStr);
     } else {
-        throw new Error('Post method is NOT supported')
+        throw new Error('GET method is NOT supported')
     }
-
 }
 
-getBooksData = () => {
-    return fs.readFileSync(booksDataPath).toString('utf-8')
-}
 
 mapContextPath = (url) => {
     return '/' + url.split('/')[1]
 }
 mapSubUrl = (url) => {
-    let slashLastPosition = url.lastIndexOf('/');
-    return url.substr(slashLastPosition, url.length)
+    let slashLastPosition = url.substr(1).indexOf('/')+1;
+    let paramsStartPosition = url.substr(1).indexOf('?')+1;
+
+    if (paramsStartPosition === 0) {
+        return url.slice(slashLastPosition)
+    } else {
+        return url.substring(slashLastPosition, paramsStartPosition)
+    }
+}
+mapUrlParams = (url) => {
+    let paramsStartPosition = url.indexOf('?');
+
+    let params = {};
+    if (paramsStartPosition === -1) return params
+
+    url.slice(paramsStartPosition+1)
+        .split('&')
+        .forEach(paramStr => {
+            let param = paramStr.split('=');
+            if (param.length !== 2) throw new Error('Incorrect url parameters with length: ' + param.length)
+
+            params[param[0]] = param[1]
+        })
+
+    return params
 }
 
-saveBook = (book) => {
-    console.log('saving a book...')
 
+
+/** GET methods with json response */
+getBookData = (req) => {
+    const storageStr = fs.readFileSync(booksDataPath).toString('utf-8');
+    const storage = JSON.parse(storageStr)
+    const id = mapUrlParams(req.url)['id']
+    const result = storage.list.find(book => book.id == id);
+
+    return JSON.stringify(result);
+}
+getBooksData = () => {
+    return fs.readFileSync(booksDataPath).toString('utf-8')
+}
+getAccountsData = () => {
+    return fs.readFileSync(accountsDataPath).toString('utf-8')
+}
+
+
+/** POST methods */
+saveBook = (book) => {
     book.id = new Date().getTime()
-    console.log(book)
 
     const booksStr = fs.readFileSync(booksDataPath).toString('utf-8');
     const books = JSON.parse(booksStr)
@@ -155,4 +202,34 @@ saveBook = (book) => {
     books.list.push(book)
     fs.writeFileSync(booksDataPath, JSON.stringify(books))
 }
+registerAccount = (account) => {
+    account.id = new Date().getTime()
 
+    const accountsStr = fs.readFileSync(accountsDataPath).toString('utf-8')
+    const accounts = JSON.parse(accountsStr)
+
+    accounts.list.push(account)
+    fs.writeFileSync(accountsDataPath, JSON.stringify(accounts))
+}
+deleteAccount = (json) => {
+    const accountId = json.id;
+
+    const accountsStr = fs.readFileSync(accountsDataPath).toString('utf-8');
+    let accounts = JSON.parse(accountsStr)
+    const foundAccount = accounts.list.find(account => account.id == accountId);
+    const accountPositionIndex = accounts.list.indexOf(foundAccount);
+    accounts.list.splice(accountPositionIndex, 1)
+
+    fs.writeFileSync(accountsDataPath, JSON.stringify(accounts))
+}
+deleteBook = (json) => {
+    const bookId = json.id
+
+    const bookStr = fs.readFileSync(booksDataPath).toString('utf-8')
+    let books = JSON.parse(bookStr)
+    const foundBook = books.list.find(book => book.id == bookId)
+    const bookPositionIndex = books.list.indexOf(foundBook)
+    books.list.splice(bookPositionIndex, 1)
+
+    fs.writeFileSync(booksDataPath, JSON.stringify(books))
+}

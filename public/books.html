@@ -1,54 +1,52 @@
-<!DOCTYPE html>
+<!DOCTYPE>
 <html>
 
 <head>
     <meta charset='utf-8'>
     <title>Library | Books</title>
 
-    <link rel="shortcut icon" href="#" />
+    <link rel="shortcut icon" href="#"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="/library/style/style.css">
 
     <script src="/library/javascript/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
 </head>
 
 <body class="body">
 
-    <!-- Navigation bar -->
-    <div id="navigation-bar-palace" class="w-100"></div>
+<!-- Navigation bar -->
+<div id="navigation-bar-palace" class="w-100"></div>
 
-    <div class="container mt-4 marg-b-cards">
+<!-- Content -->
+<div class="container mt-4 marg-b-cards">
 
-        <h1 class="w-100">
-            Books
-        </h1>
-        <hr class="mt-0">
+    <h1 class="w-100">
+        Books
+        <a href="/library/add-book">
+            <button type="button" class="btn btn-success mt-2 fl-right">
+                Add Book
+            </button>
+        </a>
+    </h1>
+    <hr class="mt-0">
 
-        <div id="book-cards-place">
-<!--            <div class="card m-4 d-inline-block bookcard-w">-->
-<!--                <img class="card-img-top h-18"-->
-<!--                     src="/library/media/#"-->
-<!--                     alt="Book hardcover">-->
-<!--                <div class="card-body ">-->
-<!--                    <h5 class="card-title m-0">${book.name}</h5>-->
-<!--                    <div class="meta">-->
-<!--                        <a>${book.author}</a>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="card-footer p-2">-->
-<!--                    <a href="/library/book/#"-->
-<!--                       class="btn btn-primary btn-sm w-100">-->
-<!--                        Open-->
-<!--                    </a>-->
-<!--                </div>-->
-<!--            </div>-->
-        </div>
+    <div id="book-cards-place"></div>
 
-    <br><hr>
-    </div>
+    <br>
+    <hr>
+</div>
 
-    <!-- Footer -->
-    <div id="footer-palace" class="w-100"></div>
+<!-- Footer -->
+<div id="footer-palace" class="w-100"></div>
 
 <script>
     loadBookCards()
