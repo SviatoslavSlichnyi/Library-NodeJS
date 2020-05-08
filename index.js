@@ -26,6 +26,7 @@ const registerPathWithPage = {
 const getDataByPathFunctions = {
     '/book': (req) => getBookData(req),
     '/books': () => getBooksData(),
+    '/account': (req) => getAccountData(req),
     '/accounts': () => getAccountsData()
 }
 const postDataFunctions = {
@@ -186,6 +187,14 @@ getBookData = (req) => {
 }
 getBooksData = () => {
     return fs.readFileSync(booksDataPath).toString('utf-8')
+}
+getAccountData = (req) => {
+    const storageStr = fs.readFileSync(accountsDataPath).toString('utf-8')
+    const storage = JSON.parse(storageStr)
+    const id = mapUrlParams(req.url)['id']
+    const result = storage.list.find(account => account.id == id)
+
+    return JSON.stringify(result)
 }
 getAccountsData = () => {
     return fs.readFileSync(accountsDataPath).toString('utf-8')

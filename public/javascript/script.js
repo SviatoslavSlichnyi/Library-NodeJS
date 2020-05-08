@@ -260,8 +260,8 @@ fillPageWithBookInfo = (book) => {
     console.log('book: ' + JSON.stringify(book))
 
     document.getElementById('title').innerText = book.name;
-    document.getElementById('first-name').innerText = book.firstName;
-    document.getElementById('last-name').innerText = book.last;
+    document.getElementById('first-name').innerText = book.authorFirstName;
+    document.getElementById('last-name').innerText = book.authorLastName;
     let hardcoverImg = document.getElementById('hardcover-img');
     if (book.hardcoverUrl !== '') {
         hardcoverImg.src = book.hardcoverUrl;
@@ -273,6 +273,19 @@ fillPageWithBookInfo = (book) => {
     document.getElementById('pages').innerText = book.numberOfPages;
     document.getElementById('language').innerText = book.language;
     document.getElementById('description').innerText = book.description;
+}
+
+loadAccountInfo = () => {
+    const id = mapUrlParams(location.href)['id']
+    const url = `${contextApiPath}/account?id=${id}`
+
+    get(url, xhr => fillPageWithAccountInfo(JSON.parse(xhr.response)))
+}
+fillPageWithAccountInfo = (account) => {
+    document.getElementById('username').innerText = account.username
+    document.getElementById('first-name').innerText = account.authorFirstName
+    document.getElementById('last-name').innerText = account.authorLastName
+    document.getElementById('email').innerText = account.email
 }
 
 
